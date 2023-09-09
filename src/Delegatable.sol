@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-interface IGovernor is Ownable {
+interface IGovernor {
     function propose(
         address[] memory targets,
         uint256[] memory values,
@@ -18,10 +18,10 @@ interface IGovernor is Ownable {
     ) external returns (uint256 balance);
 }
 
-contract Counter {
+contract Delegatable is Ownable {
     address public delegate;
 
-    function setDelegate(address delegate_) onlyOwner {
+    function setDelegate(address delegate_) public onlyOwner {
         delegate = delegate_;
     }
 
@@ -29,7 +29,7 @@ contract Counter {
         address governorAddress,
         uint256 proposalId,
         uint8 support,
-        string calldata reason) {
+        string calldata reason) public {
         require(msg.sender == delegate, "Only delegate can cast votes");
         IGovernor(governorAddress).castVoteWithReason(proposalId, support, reason);
     }
