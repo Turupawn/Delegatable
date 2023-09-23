@@ -19,18 +19,15 @@ contract DelegatableTest is Test {
     function setUp() public {
         // In order to test this contract we will need to go back in time where there was an active proposal to test
         vm.roll(106147085);
-        vm.roll(block.number + 1);
         proposalId = 89320044424373681815246934685110221027039718080034540446478326550596924622672;
 
         // Let's start by launching a delegatable contract
         delegatable = new Delegatable();
         // The owner sets the delegate
         delegatable.setDelegate(delegate);
-        // An token holder delegates to the contract
+        // A token holder delegates to the contract
         vm.prank(tokenHolder);
         IVotes(VOTES_TOKEN).delegate(address(delegatable));
-
-        vm.roll(block.number + 1);
     }
 
     function testCastVote() public {
